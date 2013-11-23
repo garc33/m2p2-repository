@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.herman</groupId>
+	<artifactId>csv</artifactId>
+	<version>1.0</version>
+	<name>CSV Framework</name>
+	<description>CSV (un)marshaller</description>
+	<properties>
+		<java.version>1.6</java.version>
+		<junit.version>4.11</junit.version>
+		<built.repo.dir>${project.build.directory}/repo</built.repo.dir>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.tngtech.java</groupId>
+			<artifactId>junit-dataprovider</artifactId>
+			<version>1.5.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<altDeploymentRepository>internal.repo::default::file://${built.repo.dir}</altDeploymentRepository>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.8</version>
+				<configuration>
+					<message>Maven artifacts for
+						${project.groupId}:${project.artifactId}:${project.version}
+						~${maven.build.timestamp}</message>
+					<noJekyll>true</noJekyll>
+					<outputDirectory>${built.repo.dir}</outputDirectory>
+					<merge>true</merge>
+
+					<repositoryOwner>garc33</repositoryOwner>
+					<repositoryName>m2p2-repository</repositoryName>
+					<branch>refs/heads/gh-pages</branch>
+					<path>maven/snapshots</path>
+					<oauth2Token>${env.MY_SECRET_ENV}</oauth2Token>
+
+					<includes>
+						<include>**/*</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
